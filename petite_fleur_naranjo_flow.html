@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline - Estrategia Petite Fleur Naranjo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* Paleta de colores */
+        :root {
+            --primary-purple: #510C76;
+            --warm-beige: #B7A082;
+            --neutral-gray: #979797;
+            --white: #ffffff;
+            --light-purple: rgba(81, 12, 118, 0.1);
+            --light-beige: rgba(183, 160, 130, 0.1);
+            --light-gray: rgba(151, 151, 151, 0.1);
+        }
+
+        .header {
+            background: var(--primary-purple);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .campaign-info {
+            background: var(--white);
+            margin: 2rem auto;
+            max-width: 1200px;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--warm-beige);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light-beige);
+            border-radius: 8px;
+        }
+
+        .info-item h3 {
+            color: var(--primary-purple);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-item p {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        /* Container principal */
+        .timeline-container {
+            max-width: 100%;
+            margin: 2rem 0;
+        }
+
+        .timeline-wrapper {
+            background: var(--white);
+            margin: 0 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid var(--neutral-gray);
+            overflow: hidden;
+        }
+
+        .timeline-header {
+            background: var(--light-gray);
+            text-align: center;
+            padding: 2rem;
+            border-bottom: 3px solid var(--warm-beige);
+        }
+
+        .timeline-header h2 {
+            color: var(--primary-purple);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-header p {
+            color: var(--neutral-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Envíos en columnas horizontales completas */
+        .envios-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .envio-row {
+            width: 100%;
+            padding: 3rem 2rem;
+            border-bottom: 2px solid var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .envio-row:hover {
+            background: var(--light-beige);
+        }
+
+        .envio-row:last-child {
+            border-bottom: none;
+        }
+
+        .envio-row.purple {
+            border-left: 6px solid var(--primary-purple);
+        }
+
+        .envio-row.beige {
+            border-left: 6px solid var(--warm-beige);
+        }
+
+        .envio-row.gray {
+            border-left: 6px solid var(--neutral-gray);
+        }
+
+        /* Header de cada envío */
+        .envio-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .envio-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 2rem;
+            flex-shrink: 0;
+        }
+
+        .envio-number.purple { background: var(--primary-purple); }
+        .envio-number.beige { background: var(--warm-beige); }
+        .envio-number.gray { background: var(--neutral-gray); }
+
+        .envio-info {
+            flex: 1;
+        }
+
+        .envio-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .envio-title.purple { color: var(--primary-purple); }
+        .envio-title.beige { color: var(--warm-beige); }
+        .envio-title.gray { color: var(--neutral-gray); }
+
+        .envio-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+
+        .timing-badge {
+            background: var(--neutral-gray);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* Contenido horizontal en grid */
+        .envio-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .content-column {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--light-gray);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .column-header {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--primary-purple);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--warm-beige);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .content-item {
+            background: var(--light-beige);
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--warm-beige);
+            transition: all 0.3s ease;
+        }
+
+        .content-item:hover {
+            background: var(--light-purple);
+            border-left-color: var(--primary-purple);
+            transform: translateX(3px);
+        }
+
+        .content-item strong {
+            color: var(--primary-purple);
+            font-weight: bold;
+        }
+
+        .highlight-tag {
+            background: var(--primary-purple);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin: 0.2rem 0;
+        }
+
+        .secondary-tag {
+            background: var(--warm-beige);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin: 0.2rem 0;
+        }
+
+        /* KPIs horizontales */
+        .kpi-section {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid var(--neutral-gray);
+        }
+
+        .kpi-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-purple);
+            margin-bottom: 1rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .kpi-item {
+            background: var(--white);
+            padding: 0.8rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+            border: 2px solid var(--light-gray);
+            font-weight: 500;
+        }
+
+        .kpi-item.target {
+            background: var(--primary-purple);
+            color: white;
+            border-color: var(--primary-purple);
+            font-weight: bold;
+        }
+
+        .kpi-item.secondary {
+            background: var(--warm-beige);
+            color: white;
+            border-color: var(--warm-beige);
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .envio-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .timeline-wrapper {
+                margin: 0 1rem;
+            }
+            
+            .envio-row {
+                padding: 2rem 1rem;
+            }
+            
+            .envio-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .envio-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .envio-number {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animaciones */
+        .envio-row {
+            opacity: 0;
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .envio-row:nth-child(1) { animation-delay: 0.2s; }
+        .envio-row:nth-child(2) { animation-delay: 0.4s; }
+        .envio-row:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Estrategia Lanzamiento Petite Fleur Naranjo</h1>
+        </div>
+
+    <div class="campaign-info">
+        <div class="info-grid">
+            <div class="info-item">
+                <h3>🎯 Objetivo</h3>
+                <p>1.200 botellas agotadas en 60 días</p>
+            </div>
+            <div class="info-item">
+                <h3>⏱️ Duración</h3>
+                <p>4 semanas - 3 envíos estratégicos</p>
+            </div>
+            <div class="info-item">
+                <h3>🔄 Canales</h3>
+                <p>Email + WhatsApp + Blog + eCommerce</p>
+            </div>
+            <div class="info-item">
+                <h3>💰 Precio</h3>
+                <p>$27.300 - Edición limitada</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="timeline-container">
+        <div class="timeline-wrapper">
+            
+            <div class="envios-container">
+                
+                <!-- ENVÍO 1: REVELACIÓN -->
+                <div class="envio-row purple">
+                    <div class="envio-header">
+                        <div class="envio-number purple">1</div>
+                        <div class="envio-info">
+                            <div class="envio-title purple">CAMPAÑA 1 - Revelación del Secreto Ancestral</div>
+                            <div class="envio-subtitle">Educación y construcción de expectativa</div>
+                            <span class="timing-badge">Primer envío 16/06/25 - Semana 1-2 </span>
+                        </div>
+                    </div>
+                    
+                    <div class="envio-content">
+                        <div class="content-column">
+                            <div class="column-header">📧 Email Marketing Segmentado</div>
+                            <ul class="content-list">
+                                <li class="content-item">
+                                    <strong>VIP:</strong> "Acceso exclusivo: El vino que une milenios de tradición"
+                                    <a href="https://docs.google.com/document/d/1-fp4_5_3_cx8KFZ2tsHzaDw6HJLsQ5cwGnXGTGJ_cCo/edit?usp=drive_link" target="_blank" rel="noopener noreferrer">
+                                    <br><span class="highlight-tag">Ver Texto y Plantilla Perfit</span></a>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Conocedores:</strong> "La técnica ancestral que revoluciona lo contemporáneo"
+                                    <br><span class="secondary-tag">Técnica</span>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Nuevos:</strong> "Descubrí el estilo de vino más antiguo del mundo"
+                                    <br><span class="highlight-tag">Educación</span>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Storytelling:</strong> Conexión Georgia 8.000 años con Valle de Uco
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="content-column">
+                            <div class="column-header">📝 Entrada de Blog + 💬 WhatsApp</div>
+                            <ul class="content-list">
+                                <li class="content-item">
+                                    <strong>Post principal:</strong> "Petite Fleur Naranjo: Tradición Milenaria se Vuelve Vanguardia"
+                                    <a href="https://docs.google.com/document/d/1KLL93M7A71sY30yQ4wMVisLCM5RC9xD9/edit?usp=drive_link&ouid=102706780687296980859&rtpof=true&sd=true"target="_blank" rel="noopener noreferrer">
+                                    <br><span class="highlight-tag">Ver Texto</span></a>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Lead Magnet:</strong> Guía Completa de Vinos Naranjos (PDF)
+                                    <br><span class="secondary-tag">Ver Guía</span>
+                                </li>
+                                <li class="content-item">
+                                    <strong>WhatsApp:</strong> Automatización con respuestas segmentadas
+                                    <a href="https://docs.google.com/document/d/1ppH4cZrTBDr1TtYslLPZJdC_NzSvgZvJSG8H7-vAmOI/edit?usp=drive_link"target="_blank" rel="noopener noreferrer">
+                                    <br><span class="highlight-tag">Ver Texto</span></a>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Formulario:</strong> Email + Teléfono + Opt-in WhatsApp
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="content-column">
+                            <div class="column-header">🛒 eCommerce Preparación</div>
+                            <ul class="content-list">
+                                <li class="content-item">
+                                    <strong>Landing "Coming Soon":</strong> Contador regresivo al lanzamiento
+                                    <br><span class="highlight-tag">Ver Landing Page</span>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Video teaser:</strong> Proceso de maceración 90 días (30 segundos)
+                                </li>
+                                                                <li class="content-item">
+                                    <strong>Notificaciones:</strong> "Avisarme cuando esté disponible"
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="kpi-section">
+                        <div class="kpi-title">📊 KPIs y Objetivos Envío 1</div>
+                        <div class="kpi-grid">
+                            <div class="kpi-item target">Apertura Email +25%</div>
+                            <div class="kpi-item target">Click-through +8%</div>
+                            <div class="kpi-item secondary">39+ Leads WhatsApp</div>
+                            <div class="kpi-item secondary">50+ Downloads Guía</div>
+                                                    </div>
+                    </div>
+                </div>
+
+                <!-- ENVÍO 2: PROFUNDIZACIÓN -->
+                <div class="envio-row beige">
+                    <div class="envio-header">
+                        <div class="envio-number beige">2</div>
+                        <div class="envio-info">
+                            <div class="envio-title beige"> Campaña 2 - El Arte de la Paciencia</div>
+                            <div class="envio-subtitle">Proceso artesanal y pre-órdenes</div>
+                            <span class="timing-badge">Envío 23/06/25 - Semana 3</span>
+                        </div>
+                    </div>
+                    
+                    <div class="envio-content">
+                        <div class="content-column">
+                            <div class="column-header">🎨 Email Proceso Artesanal</div>
+                            <ul class="content-list">
+                                <li class="content-item">
+                                    <strong>Focus principal:</strong> "90 días de maceración: El tiempo como ingrediente principal"
+                                    <a href="https://docs.google.com/document/d/18CW4taFpHUls0_lrzFv8Hs-PumsCyOuPU7FphvOZoIg/edit?usp=drive_link"target="_blank" rel="noopener noreferrer">
+                                    <br><span class="highlight-tag">Ver Texto y plantilla Perfit</span></a>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Protagonista:</strong> José Mounier y su técnica artesanal perfeccionada
+                                </li>
+                                <li class="content-item">
+                                    <strong>Proceso único:</strong> Por qué este vino necesitó 90 días para nacer
+                                                                    </li>
+                                <li class="content-item">
+                                    <strong>Scarcity inicial:</strong> "Solo quedan X botellas de 1.200"
+                                    <br><span class="secondary-tag">Cupón descuento 15% OFF</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="content-column">
+                            <div class="column-header">🔬 Blog Técnico + WhatsApp</div>
+                            <ul class="content-list">
+                                <li class="content-item">
+                                    <strong>Post:</strong> "90 Días de Alquimia: El Proceso que Define a Petite Fleur Naranjo"
+                                    <a href="https://docs.google.com/document/d/1YW7kQu-8RT6xfbMcDH7-7Rlj1Bntm20Z/edit?usp=drive_link&ouid=102706780687296980859&rtpof=true&sd=true"target="_blank" rel="noopener noreferrer">
+                                    <br><span class="highlight-tag">Ver textos</span></a>
+                                </li>
+                                  <li class="content-item">
+                                    <strong>Exclusiva VIP:</strong> Degustación virtual con José Mounier
+                                    <br><span class="secondary-tag">Ver Video</span>
+                                </li>
+                                <li class="content-item">
+                                    <strong>WhatsApp:</strong> Retargeting + ofertas especiales por segmentos
+                                    <a href="https://docs.google.com/document/d/1P-AUqWg3188JAQ1k0rNsKuGR-RXDYw35BdJU1fkHUUE/edit?usp=drive_link"target="_blank" rel="noopener noreferrer">
+                                    <br><span class="secondary-tag">Ver Textos</span></a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="content-column">
+                            <div class="column-header">🛒 Pre-orden + Social Proof</div>
+                            <ul class="content-list">
+                                <li class="content-item">
+                                    <strong>Early bird pricing:</strong> Descuento por pre-orden limitado en tiempo
+                                    <br><span class="highlight-tag">Urgencia</span>
+                                </li>
+                                                               <li class="content-item">
+                                    <strong>Video testimonial:</strong> José Mounier explicando cada etapa
+                                    <br><span class="secondary-tag">Autoridad</span>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Opciones pago:</strong> 3 cuotas sin interés + transferencia directa
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="kpi-section">
+                        <div class="kpi-title">📊 KPIs y Objetivos Envío 2</div>
+                        <div class="kpi-grid">
+                            <div class="kpi-item target">20+ Pre-órdenes Confirmadas</div>
+                            <div class="kpi-item target">15% Conversión WhatsApp</div>
+                            <div class="kpi-item secondary">+40 Descarga Video</div>
+                            <div class="kpi-item secondary">+3 minutos Tiempo en Página</div>
+                            </div>
+                    </div>
+                </div>
+
+                <!-- ENVÍO 3: CONVERSIÓN -->
+                <div class="envio-row gray">
+                    <div class="envio-header">
+                        <div class="envio-number gray">3</div>
+                        <div class="envio-info">
+                            <div class="envio-title gray">Campaña 3 - Invitación a la Experiencia</div>
+                            <div class="envio-subtitle">Conversión final y agotamiento</div>
+                            <span class="timing-badge">Envío 30/06/25 - Semanas 3-4</span>
+                        </div>
+                    </div>
+                    
+                    <div class="envio-content">
+                        <div class="content-column">
+                            <div class="column-header">🚨 Email Urgencia + Experiencia</div>
+                            <ul class="content-list">
+                                <li class="content-item">
+                                    <strong>Urgencia real:</strong> "Tu botella te espera + experiencia de maridaje exclusiva"
+                                    <a href="https://docs.google.com/document/d/1pFaSNyvJQqRShD3KkWGNMmDYRu_YQYcC6QvvsNruY_I/edit?usp=drive_link"target="_blank" rel="noopener noreferrer">
+                                    <br><span class="highlight-tag">Ver Texto y plantilla Perfit</span></a>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Beneficio inmediato:</strong> Envío gratuito HOY + guía de degustación
+                                </li>
+                                <li class="content-item">
+                                    <strong>CTA principal:</strong> Checkout directo sin pasos intermedios
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="content-column">
+                            <div class="column-header">🍽️ Blog Gastronómico + WhatsApp</div>
+                            <ul class="content-list">
+                                <li class="content-item">
+                                    <strong>Post final:</strong> "Guía Definitiva: Cómo Maridar Petite Fleur Naranjo Como un Experto"
+                                    <a href="https://docs.google.com/document/d/1qbmgj2la10BZ37uKG9V0m30mLtpGbTmX/edit?usp=drive_link&ouid=102706780687296980859&rtpof=true&sd=true"target="_blank" rel="noopener noreferrer">
+                                    <br><span class="highlight-tag">Ver Textos</span></a>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Receta exclusiva:</strong> Salmón Glaseado con Miel paso a paso
+                                </li>
+                                <li class="content-item">
+                                    <strong>WhatsApp urgencia:</strong> "🚨 ÚLTIMO LLAMADO 🚨" + código NARANJO15
+                                    <a href="https://docs.google.com/document/d/1mTTJjBx9_x4k3iYP3rOHzcgRKA2QmwLzQTl6taPcwxk/edit?usp=drive_link" target="_blank" rel="noopener noreferrer">
+                                    <br><span class="secondary-tag">15% OFF</span></a>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Personalización:</strong> "Te reservé una botella como seguidor Monteviejo"
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="content-column">
+                            <div class="column-header">🛒 Conversión Final + Waitlist</div>
+                            <ul class="content-list">
+                                <li class="content-item">
+                                    <strong>Stock dinámico:</strong> Contador real actualizado cada hora
+                                    <br><span class="highlight-tag">Urgencia Real</span>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Checkout optimizado:</strong> 1-click purchase para usuarios registrados
+                                </li>
+                                <li class="content-item">
+                                    <strong>Garantías completas:</strong>Envío express + Tracking
+                                    <br><span class="secondary-tag">Confianza</span>
+                                </li>
+                                <li class="content-item">
+                                    <strong>Waitlist automática:</strong> Para próxima disponibilidad si se agota
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="kpi-section">
+                        <div class="kpi-title">📊 KPIs y Objetivos Envío 3</div>
+                        <div class="kpi-grid">
+                            <div class="kpi-item target">Conversión Final +15%</div>
+                            <div class="kpi-item target">600+ Unidades Vendidas</div>
+                            <div class="kpi-item secondary">25% Conversión WA Urgencia</div>
+                            <div class="kpi-item secondary">40% Uso Código Descuento</div>
+                           </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
